@@ -8,7 +8,7 @@ from app.security.jwt import decode_token
 from app.database.session import AsyncSessionLocal
 from app.models import User, UserRole
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token",refreshUrl="auth/refresh")
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):

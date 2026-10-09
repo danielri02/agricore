@@ -1,16 +1,19 @@
 
+from typing import Literal
+
 from fastapi import APIRouter, Depends, Query,status
 from sqlalchemy import func, select
 
 from app.database.session import AsyncSessionLocal
 from app.models import Operator
 from app.schemas.operator import ReportingLine, OperatorCreate, OperatorRead
+from app.schemas.pagination import PaginatedRead
 from app.models.farm import Farm
 from app.models.enums import JobStatus, UserRole
 from app.models.job import Job
 from app.models.user import User
 from app.security.role import get_current_user, require_role
-from app.database.crud import delete_data, get_data, post_data, put_data
+from app.database.crud import delete_data, get_data, get_data_paginated, post_data, put_data
 
 router = APIRouter(prefix="/operators")
 
@@ -18,6 +21,19 @@ router = APIRouter(prefix="/operators")
 @router.get("", response_model=list[OperatorRead])
 async def get_operators(_: User = Depends(get_current_user)):
     return await get_data(Operator)
+
+@router.get("/paginated", response_model=PaginatedRead[OperatorRead])
+async def get_operators_paginated(
+    page: int = Query(0),
+    page_size: int = Query(20),
+    filter_by: str | None = Query(None),
+    sort_by: str | None = Query(None),
+    sort_dir: Literal["asc", "desc"] | None = Query(None),
+    _: User = Depends(get_current_user),
+):
+    return await get_data_paginated(Operator, page, page_size, filter_by, sort_by, sort_dir)
+
+
 
 @router.post("", response_model=list[OperatorRead], status_code=status.HTTP_201_CREATED)
 async def post_operators(body: list[OperatorCreate],_: User = Depends(require_role(UserRole.ADMIN))):

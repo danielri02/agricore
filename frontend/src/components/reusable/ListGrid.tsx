@@ -3,9 +3,9 @@ import { Alert, Box, Button, Stack } from '@mui/material'
 import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid"
 import { deleteRows, updateRow } from '../../api/persist'
 import { Delete, Save } from '@mui/icons-material'
-import { useState } from 'react'
-import fetchData from '../../api/fetchData'
+import { useEffect, useState } from 'react'
 import { isAdmin } from '../../context/roles'
+import apiClient from '../../api/client'
 
 
 
@@ -18,7 +18,31 @@ function ListGrid({ label, endpoint, columns }: any) {
         ids: new Set(),
     })
 
-    const { data, setData, loading, error } = fetchData(endpoint, [refresh])
+    const [data, setData] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<any>(null)
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+            setError(null)
+            try {
+                const response = await apiClient.get(endpoint)
+                setData(response.data)
+            }
+            catch (error) {
+                setError(error)
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [refresh])
+
+
+
+    //const { data, setData, loading, error } = fetchData(endpoint, [refresh])
 
     function refreshGrid() {
         setSelection(s => { s.ids.clear(); return s })

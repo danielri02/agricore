@@ -7,11 +7,12 @@ from .operator import Operator
 from .job import Job
 from .report import Report
 from .user import User
+from .refresh import RefreshLog
 
 
 __all__ = [
     "Base",
     "Farm","Equipment","Operator","Job","Report",
     "EquipmentStatus", "JobStatus", "JobPriority",
-    "User", "UserRole"
+    "User", "UserRole", "RefreshLog"
 ]

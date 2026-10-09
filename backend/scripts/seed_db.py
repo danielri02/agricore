@@ -1,6 +1,6 @@
-
 import asyncio
 from math import log, sqrt
+import random
 from random import randint
 from app.database.session import AsyncSessionLocal
 
@@ -15,6 +15,9 @@ from app.security.password import hash_password
 date_start = int(datetime(2000, 1, 1, tzinfo=timezone.utc).timestamp())
 date_end = int(datetime.now(timezone.utc).timestamp())
 
+
+random.seed(2478)
+
 def randchars(n: int = 1):
     return "".join([chr(ord("A") + randint(0, 25)) for _ in range(n)])
 
@@ -25,12 +28,12 @@ def randselect(values: list):
     return values[randint(0, len(values) - 1)]
 
 
-async def seed_db(n_equipment: int = 1000):
+async def seed_db(n_equipment: int = 500):
     n_regions = int(log(n_equipment))
-    n_farms = int(n_equipment / 20)
-    n_operators = int(sqrt(n_equipment))
-    n_models = int(2*log(n_equipment))
-    n_jobs = int(n_equipment*2)
+    n_farms = int(n_equipment // 20)
+    n_operators = int(n_equipment // 2)
+    n_models = int(2 * log(n_equipment))
+    n_jobs = int(n_equipment)
 
     regions = list(set(randchars(2) for _ in range(n_regions)))
     farms = list(set(f"{randchars(5)} Farm" for _ in range(n_farms)))
@@ -82,15 +85,15 @@ async def seed_db(n_equipment: int = 1000):
             for j_title in jobs
         )
 
-        session.add_all(
-            Report(
-                job_id=randint(1, len(jobs)),
-                file_url="aws.com/"+str(i),
-                notes=f"{randchars(5)} {randchars(5)} {randchars(5)}",
-                timestamp=datetime.fromtimestamp(randint(date_start,date_end))
-            )
-            for i in range(len(jobs))
-        )
+        # session.add_all(
+        #     Report(
+        #         job_id=randint(1, len(jobs)),
+        #         file_url="aws.com/"+str(i),
+        #         notes=f"{randchars(5)} {randchars(5)} {randchars(5)}",
+        #         timestamp=datetime.fromtimestamp(randint(date_start,date_end))
+        #     )
+        #     for i in range(len(jobs))
+        # )
 
         session.add_all(
             [

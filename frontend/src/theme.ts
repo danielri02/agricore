@@ -1,19 +1,24 @@
 
 import { createTheme } from "@mui/material"
 
-const theme = {
-    ...createTheme({
-        palette: {
-            mode: "light",
-            primary: {
-                main: "#0da139"
-            },
-            secondary: {
-                main: "#0099ff"
-            },
-        }
-    }),
-    shape: { borderRadius: 8 }
+
+function getTheme(mode: string) {
+    const theme = {
+        ...createTheme({
+            palette: {
+                mode: mode as "light" | "dark",
+                primary: {
+                    main: "#0da139"
+                },
+                secondary: {
+                    main: "#0099ff"
+                },
+            }
+        }),
+        shape: { borderRadius: 8 }
+    }
+    return theme
 }
 
-export default theme
+
+export default getTheme

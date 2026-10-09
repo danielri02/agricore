@@ -2,6 +2,7 @@
 
 import { FoodBank } from '@mui/icons-material'
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material'
+import DarkToggle from './DarkToggle'
 
 
 function AppHeader({ username, role, onLogout }: any) {
@@ -19,6 +20,7 @@ function AppHeader({ username, role, onLogout }: any) {
                         <Button color="inherit" onClick={onLogout}>Log Out</Button>
                     </Box>
                 )}
+                <DarkToggle/>
             </Toolbar>
         </AppBar>
     </>

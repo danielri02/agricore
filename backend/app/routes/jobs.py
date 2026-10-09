@@ -1,13 +1,16 @@
+from typing import Literal
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 
 from app.database.session import AsyncSessionLocal
 from app.models import Job, Equipment, Operator
 from app.schemas.job import ColocationDiscrepancy, JobCreate, JobRead
+from app.schemas.pagination import PaginatedRead
 from app.models.enums import UserRole
 from app.models.user import User
 from app.security.role import get_current_user, require_role
-from app.database.crud import delete_data, get_data, post_data, put_data
+from app.database.crud import delete_data, get_data, get_data_paginated, post_data, put_data
 
 router = APIRouter(prefix="/jobs")
 
@@ -15,6 +18,19 @@ router = APIRouter(prefix="/jobs")
 @router.get("", response_model=list[JobRead])
 async def get_jobs(_: User = Depends(get_current_user)):
     return await get_data(Job)
+
+@router.get("/paginated", response_model=PaginatedRead[JobRead])
+async def get_jobs_paginated(
+    page: int = Query(0),
+    page_size: int = Query(20),
+    filter_by: str | None = Query(None),
+    sort_by: str | None = Query(None),
+    sort_dir: Literal["asc", "desc"] | None = Query(None),
+    _: User = Depends(get_current_user),
+):
+    return await get_data_paginated(Job, page, page_size, filter_by, sort_by, sort_dir)
+
+
 
 @router.post("", response_model=list[JobRead], status_code=status.HTTP_201_CREATED)
 async def post_jobs(

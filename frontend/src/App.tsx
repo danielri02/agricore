@@ -26,8 +26,8 @@ import Dashboard from './components/layout/Dashboard'
 function App() {
 
   return <>
-     <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route element={<RequireAuth />}>
@@ -39,7 +39,7 @@ function App() {
               <Route path="/farms" element={<FarmGrid />} />
               <Route path="/farms/create" element={<FarmCreate />} />
               <Route path="/farms/maintenance-flags" element={<MaintenanceFlags />} />
-              
+
               <Route path="/equipment" element={<EquipmentGrid />} />
               <Route path="/equipment/create" element={<EquipmentCreate />} />
               <Route path="/equipment/low-fuel-alerts" element={<LowFuelAlerts />} />
@@ -62,8 +62,8 @@ function App() {
             </Route>
           </Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </>
 }
 
